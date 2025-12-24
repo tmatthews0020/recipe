@@ -1,0 +1,14 @@
+# Tilt ignore file
+# Files and directories that should not trigger rebuilds
+
+.git/
+.gitignore
+*.md
+diagrams/
+*.sln
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+*.suo

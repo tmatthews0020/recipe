@@ -1,0 +1,21 @@
+{
+  "name": "@recipe/data-generators",
+  "version": "1.0.0",
+  "description": "Fake data generators for recipe API load testing",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./faker": "./faker-utils.js",
+    "./recipe": "./recipe-generator.js"
+  },
+  "keywords": [
+    "faker",
+    "data-generator",
+    "k6",
+    "load-testing",
+    "recipe"
+  ],
+  "author": "",
+  "license": "MIT"
+}

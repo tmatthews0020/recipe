@@ -1,0 +1,112 @@
+classDiagram
+    class Recipe {
+        +int Id
+        +string Name
+        +string Description
+        +int PrepTimeMinutes
+        +int CookTimeMinutes
+        +int Servings
+        +string Difficulty
+        +string ImageUrl
+        +DateTime CreatedDate
+        +DateTime UpdatedDate
+        +List~RecipeIngredient~ RecipeIngredients
+        +List~Instruction~ Instructions
+        +List~RecipeCategory~ RecipeCategories
+        +List~MealPlan~ MealPlans
+    }
+
+    class Ingredient {
+        +int Id
+        +string Name
+        +string Category
+        +List~RecipeIngredient~ RecipeIngredients
+    }
+
+    class RecipeIngredient {
+        +int Id
+        +int RecipeId
+        +int IngredientId
+        +decimal Quantity
+        +string Unit
+        +string Notes
+        +Recipe Recipe
+        +Ingredient Ingredient
+    }
+
+    class Instruction {
+        +int Id
+        +int RecipeId
+        +int StepNumber
+        +string Description
+        +int? TimeMinutes
+        +Recipe Recipe
+    }
+
+    class Category {
+        +int Id
+        +string Name
+        +string Type
+        +List~RecipeCategory~ RecipeCategories
+    }
+
+    class RecipeCategory {
+        +int RecipeId
+        +int CategoryId
+        +Recipe Recipe
+        +Category Category
+    }
+
+    class MealPlan {
+        +int Id
+        +DateTime Date
+        +string MealType
+        +int RecipeId
+        +int Servings
+        +Recipe Recipe
+        +List~ShoppingListItem~ ShoppingListItems
+    }
+
+    class ShoppingList {
+        +int Id
+        +string Name
+        +DateTime CreatedDate
+        +List~ShoppingListItem~ Items
+    }
+
+    class ShoppingListItem {
+        +int Id
+        +int ShoppingListId
+        +int IngredientId
+        +decimal Quantity
+        +string Unit
+        +bool IsChecked
+        +int? MealPlanId
+        +ShoppingList ShoppingList
+        +Ingredient Ingredient
+        +MealPlan MealPlan
+    }
+
+    class NutritionalInfo {
+        +int Id
+        +int RecipeId
+        +int Calories
+        +decimal Protein
+        +decimal Carbohydrates
+        +decimal Fat
+        +decimal Fiber
+        +Recipe Recipe
+    }
+
+    Recipe "1" --> "*" RecipeIngredient : has
+    Ingredient "1" --> "*" RecipeIngredient : used in
+    Recipe "1" --> "*" Instruction : has
+    Recipe "*" --> "*" Category : categorized by
+    RecipeCategory "*" --> "1" Recipe
+    RecipeCategory "*" --> "1" Category
+    Recipe "1" --> "*" MealPlan : planned in
+    Recipe "1" --> "0..1" NutritionalInfo : has
+    ShoppingList "1" --> "*" ShoppingListItem : contains
+    Ingredient "1" --> "*" ShoppingListItem : appears in
+    MealPlan "1" --> "*" ShoppingListItem : generates
+
