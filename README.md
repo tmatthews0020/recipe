@@ -1,6 +1,6 @@
-# Recipe Management API
+# Recipe Management System
 
-A comprehensive ASP.NET Core Web API for managing recipes, ingredients, meal plans, and shopping lists. Built with .NET 10 and Entity Framework Core.
+A full-stack recipe management application with an ASP.NET Core Web API backend and a modern React frontend. Manage recipes, ingredients, meal plans, and shopping lists with ease.
 
 ## Features
 
@@ -15,6 +15,7 @@ A comprehensive ASP.NET Core Web API for managing recipes, ingredients, meal pla
 
 ## Technology Stack
 
+### Backend
 - .NET 10
 - ASP.NET Core Web API
 - Entity Framework Core 10
@@ -22,23 +23,34 @@ A comprehensive ASP.NET Core Web API for managing recipes, ingredients, meal pla
 - AutoMapper
 - Swagger/OpenAPI
 
+### Frontend
+- React 18
+- React Router 6
+- Vite
+- Modern CSS
+
 ## Project Structure
 
 ```
-RecipeApi/
-├── Controllers/         # API Controllers
-│   ├── RecipesController.cs
-│   ├── IngredientsController.cs
-│   ├── CategoriesController.cs
-│   ├── MealPlansController.cs
-│   └── ShoppingListsController.cs
-├── DTOs/               # Data Transfer Objects
-├── Models/             # Entity Models
-├── Data/               # DbContext
-├── Repositories/       # Data Access Layer
-├── Services/           # Business Logic Layer
-├── Program.cs          # Application Entry Point
-└── appsettings.json    # Configuration
+recipe/
+├── RecipeApi/           # ASP.NET Core Web API
+│   ├── Controllers/     # API Controllers
+│   ├── DTOs/            # Data Transfer Objects
+│   ├── Models/          # Entity Models
+│   ├── Data/            # DbContext
+│   ├── Repositories/    # Data Access Layer
+│   ├── Services/        # Business Logic Layer
+│   ├── Program.cs       # Application Entry Point
+│   └── appsettings.json # Configuration
+│
+└── recipe-ui/           # React Frontend Application
+    ├── src/
+    │   ├── components/  # Reusable React components
+    │   ├── pages/       # Page components
+    │   ├── services/    # API service layer
+    │   └── types/       # Type definitions
+    ├── package.json
+    └── vite.config.js
 ```
 
 ## Getting Started
@@ -46,6 +58,7 @@ RecipeApi/
 ### Prerequisites
 
 - .NET 10 SDK
+- Node.js 18+ (for frontend)
 - PostgreSQL (version 12 or higher)
 - Visual Studio 2022 or Visual Studio Code (optional)
 
@@ -79,17 +92,24 @@ RecipeApi/
    dotnet ef database update
    ```
 
-5. **Run the Application**
+5. **Run the API**
    ```bash
    dotnet run
    ```
 
-6. **Access Swagger UI**
+6. **Set up the React UI**
 
-   Open your browser and navigate to:
+   In a new terminal window:
+   ```bash
+   cd recipe-ui
+   npm install
+   npm run dev
    ```
-   https://localhost:5001/swagger
-   ```
+
+7. **Access the Application**
+
+   - React UI: `http://localhost:5173`
+   - Swagger API Documentation: `https://localhost:5001/swagger`
 
 ## API Endpoints
 

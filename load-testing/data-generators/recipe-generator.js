@@ -54,7 +54,8 @@ export class RecipeFaker extends BaseFaker {
 
     for (let i = 0; i < ingredientCount; i++) {
       ingredients.push({
-        name: this.ingredient(),
+        ingredientId: this.randomInt(0, 100),
+        ingredientName: this.ingredient(),
         amount: this.randomFloat(0.25, 5, 2),
         unit: this.unit()
       });
