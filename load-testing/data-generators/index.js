@@ -1,6 +1,7 @@
 // Main exports for @recipe/data-generators module
 export { BaseFaker } from './faker-utils.js';
 export { RecipeFaker } from './recipe-generator.js';
+export { IngredientFaker } from './ingredient-generator.js';
 export { generateSearchParams, generateSearchQueries } from './search-generator.js';
 export {
   generateRecipe,
