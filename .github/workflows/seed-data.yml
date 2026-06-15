@@ -1,0 +1,49 @@
+name: Seed Dev Data
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  seed:
+    environment: dev
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+
+      - name: Get AKS credentials
+        run: |
+          tofu -chdir=deploy/terraform init
+          AKS=$(tofu -chdir=deploy/terraform output -raw aks_cluster_name)
+          RG=$(tofu -chdir=deploy/terraform output -raw resource_group_name)
+          az aks get-credentials --resource-group $RG --name $AKS --overwrite-existing
+        env:
+          TF_VAR_postgres_admin_password: ${{ secrets.POSTGRES_ADMIN_PASSWORD }}
+
+      - name: Get API URL
+        run: |
+          IP=$(kubectl get ingress recipe-api -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          echo "BASE_URL=http://$IP" >> $GITHUB_ENV
+
+      - name: Setup k6
+        uses: grafana/setup-k6-action@v1
+
+      - name: Seed ingredients
+        run: k6 run --env BASE_URL=${{ env.BASE_URL }} load-testing/ingredients/bulk-create-ingredients.js
+
+      - name: Seed recipes
+        run: k6 run --env BASE_URL=${{ env.BASE_URL }} load-testing/recipes/bulk-create-recipes.js

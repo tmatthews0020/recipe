@@ -16,9 +16,11 @@ export default function () {
   const ingredient = testData[currentIndex % testData.length];
   currentIndex++;
 
+  const baseUrl = __ENV.BASE_URL || 'http://localhost:5000';
+
   // Make a POST request to create an ingredient
   const response = http.post(
-    'http://localhost:5000/api/ingredients',
+    `${baseUrl}/api/ingredients`,
     JSON.stringify(ingredient),
     {
       headers: { 'Content-Type': 'application/json' },

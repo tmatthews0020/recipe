@@ -15,9 +15,11 @@ export default function () {
   const recipe = testData.recipes[currentIndex % testData.recipes.length];
   currentIndex++;
 
+  const baseUrl = __ENV.BASE_URL || 'http://localhost:5000';
+
   // Make a POST request to create a recipe
   const response = http.post(
-    'http://localhost:5000/api/recipes',
+    `${baseUrl}/api/recipes`,
     JSON.stringify(recipe),
     {
       headers: { 'Content-Type': 'application/json' },
