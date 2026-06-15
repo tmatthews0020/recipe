@@ -1,3 +1,8 @@
+output "resource_group_name" {
+  description = "Name of the resource group"
+  value       = azurerm_resource_group.main.name
+}
+
 output "acr_login_server" {
   description = "ACR login server hostname for docker push"
   value       = azurerm_container_registry.main.login_server

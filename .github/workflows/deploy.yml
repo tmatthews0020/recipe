@@ -49,8 +49,9 @@ jobs:
       - name: Get AKS credentials
         run: |
           AKS=$(tofu -chdir=deploy/terraform output -raw aks_cluster_name)
+          RG=$(tofu -chdir=deploy/terraform output -raw resource_group_name)
           az aks get-credentials \
-            --resource-group ${{ vars.RESOURCE_GROUP_NAME }} \
+            --resource-group $RG \
             --name $AKS \
             --overwrite-existing
 
