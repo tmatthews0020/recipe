@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   deploy:
+    environment: dev
     runs-on: ubuntu-latest
     env:
       TF_VAR_postgres_admin_password: ${{ secrets.POSTGRES_ADMIN_PASSWORD }}
