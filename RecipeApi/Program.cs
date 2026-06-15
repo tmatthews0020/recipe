@@ -38,6 +38,9 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<RecipeDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<RecipeDbContext>();
+
 // Add AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -71,5 +74,6 @@ app.UseCors("AllowReactApp");
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecks("/health");
 
 app.Run();
