@@ -67,7 +67,7 @@ bld/
 !?*.[Cc]ache/
 
 # Entity Framework Migrations
-**/Migrations/
+# **/Migrations/
 
 # Database files
 *.mdf
