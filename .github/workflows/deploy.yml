@@ -1,0 +1,63 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_postgres_admin_password: ${{ secrets.POSTGRES_ADMIN_PASSWORD }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+
+      - name: Terraform init & apply
+        run: |
+          tofu -chdir=deploy/terraform init
+          tofu -chdir=deploy/terraform apply -auto-approve
+
+      - name: Build and push image to ACR
+        run: |
+          ACR=$(tofu -chdir=deploy/terraform output -raw acr_login_server)
+          IMAGE=$ACR/recipeapi:${{ github.sha }}
+
+          az acr login --name $ACR
+          docker build -t $IMAGE .
+          docker push $IMAGE
+
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+          echo "ACR=$ACR" >> $GITHUB_ENV
+
+      - name: Get AKS credentials
+        run: |
+          AKS=$(tofu -chdir=deploy/terraform output -raw aks_cluster_name)
+          az aks get-credentials \
+            --resource-group ${{ vars.RESOURCE_GROUP_NAME }} \
+            --name $AKS \
+            --overwrite-existing
+
+      - name: Helm upgrade
+        run: |
+          helm upgrade --install recipe-api ./deploy/helm/recipe-api \
+            --set image.repository=$ACR/recipeapi \
+            --set image.tag=${{ github.sha }} \
+            --set ingress.enabled=true \
+            --set "database.connectionString=$(tofu -chdir=deploy/terraform output -raw postgres_connection_string)" \
+            --wait

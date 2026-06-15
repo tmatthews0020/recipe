@@ -1,0 +1,24 @@
+replicaCount: 1
+
+image:
+  repository: recipeapi2y7mr1.azurecr.io/recipeapi
+  tag: 0.0.1
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+env:
+  ASPNETCORE_ENVIRONMENT: Production
+
+ingress:
+  enabled: false
+  className: nginx
+  host: ""  # e.g. api.example.com — leave empty to match all hosts
+  annotations: {}
+
+# Azure PostgreSQL connection string — set via --set or a values override file.
+# Example: "Host=myserver.postgres.database.azure.com;Database=RecipeDb;Username=myuser;Password=mypassword;Ssl Mode=Require"
+database:
+  connectionString: ""
