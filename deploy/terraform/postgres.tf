@@ -11,6 +11,7 @@ resource "azurerm_postgresql_flexible_server" "main" {
   storage_mb             = var.postgres_storage_mb
   backup_retention_days         = var.postgres_backup_retention_days
   public_network_access_enabled = false
+  zone                          = "1"
 
   depends_on = [azurerm_private_dns_zone_virtual_network_link.postgres]
 }
