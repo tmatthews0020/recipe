@@ -5,6 +5,18 @@ using RecipeApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+if (args.Contains("--migrate"))
+{
+    builder.Services.AddDbContext<RecipeDbContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+    var app = builder.Build();
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<RecipeDbContext>();
+    await db.Database.MigrateAsync();
+    return;
+}
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
